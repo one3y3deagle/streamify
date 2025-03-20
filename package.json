@@ -1,0 +1,23 @@
+{
+  "name": "streamify",
+  "version": "1.0.0",
+  "description": "Music Discord Bot",
+  "license": "MIT",
+  "author": "avishakeadhikary",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@discord-player/extractor": "^7.1.0",
+    "axios": "^1.8.2",
+    "discord-player": "^7.1.0",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7",
+    "ffmpeg-static": "^5.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0"
+  }
+}
