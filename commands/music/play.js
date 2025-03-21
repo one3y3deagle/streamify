@@ -2,49 +2,49 @@ const {SlashCommandBuilder} = require('discord.js');
 const { useMainPlayer } = require('discord-player');
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('play')
-    .setDescription('Play a song from YouTube or any other supported source.')
-    .addStringOption(option =>
-        option.setName('query')
-            .setDescription('The song title or URL to play')
-            .setRequired(true)
-            .setAutocomplete(true)),
-  async execute(interaction) {
-    const player = useMainPlayer();
-    const channel = interaction.member.voice.channel;
-    if (!channel) {
-        return await interaction.reply('You need to be in a voice channel to play music!');
-    }
-    
-    const query = interaction.options.getString('query');
-    if (!query) {
-        return await interaction.reply('No query is specified.');
-    }
+    data: new SlashCommandBuilder()
+        .setName('play')
+        .setDescription('Play a song from YouTube or any other supported source.')
+        .addStringOption(option =>
+            option.setName('query')
+                .setDescription('The song title or URL to play')
+                .setRequired(true)
+                .setAutocomplete(true)),
+    async execute(interaction) {
+        const player = useMainPlayer();
+        const channel = interaction.member.voice.channel;
+        if (!channel) {
+            return await interaction.reply('You need to be in a voice channel to play music!');
+        }
+        
+        const query = interaction.options.getString('query');
+        if (!query) {
+            return await interaction.reply('No query is specified.');
+        }
 
-    await interaction.deferReply();
+        await interaction.deferReply();
 
-    const searchResult = await player.search(query, { requestedBy: interaction.user });
-    if (!searchResult.hasTracks()) {
-        await interaction.followUp(`We found no tracks for ${query}!`);
-        return;
-    }
+        const searchResult = await player.search(query, { requestedBy: interaction.user });
+        if (!searchResult.hasTracks()) {
+            await interaction.followUp(`We found no tracks for ${query}!`);
+            return;
+        }
 
-    try {
-        const { track } = await player.play(channel, searchResult, {
-            nodeOptions: {
-                metadata: interaction.channel,
-                enableStreamInterceptor: true,
-            }
-        });
-        await interaction.followUp({ content: `Loading your track(s) - \`${track.title}.\`` });
-    } catch (error) {
-        console.error("Error: ", error);
-        await interaction.followUp({ content: `Error occurred while loading track: \`${error.message}\`` });
-    }
-  },
+        try {
+            const { track } = await player.play(channel, searchResult, {
+                nodeOptions: {
+                    metadata: interaction.channel,
+                    enableStreamInterceptor: true,
+                }
+            });
+            await interaction.followUp({ content: `Loading your track(s) - \`${track.title}.\`` });
+        } catch (error) {
+            console.error("Error occurred while loading track: ", error);
+            await interaction.followUp({ content: `Error occurred while loading track: \`${error.message}\`` });
+        }
+    },
 
-  async autocomplete(interaction) {
+    async autocomplete(interaction) {
     const player = useMainPlayer();
     const query = interaction.options.getString('query', true);
     
@@ -54,7 +54,7 @@ module.exports = {
     
     return interaction.respond(
         results.tracks.slice(0, 25).map((t) => ({
-            name: `${t.title} - ${t.author} [${t.duration}] (${t.source.toUpperCase()})`.slice(0, 100),
+            name: `${t.title}-${t.author}[${t.duration}](${t.source.toUpperCase()})`.slice(0, 100),
             value: t.url
         })).filter(t => t.name.length > 0)
     );

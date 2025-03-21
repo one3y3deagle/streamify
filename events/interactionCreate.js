@@ -14,7 +14,7 @@ module.exports = {
 			try {
 				await command.execute(interaction);
 			} catch (error) {
-				console.error(error);
+				console.error('There was an error while executing this command:', error);
 				if (interaction.replied || interaction.deferred) {
 					await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
 				} else {
@@ -32,7 +32,7 @@ module.exports = {
 			try {
 				await command.autocomplete(interaction);
 			} catch (error) {
-				console.error(error);
+				console.error('There was an error while fetching autocomplete options!', error);
 				await interaction.reply({ content: 'There was an error while fetching autocomplete options!', ephemeral: true });
 			}
 		}

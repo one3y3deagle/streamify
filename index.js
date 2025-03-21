@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Player } = require('discord-player');
-const { DefaultExtractors } = require('@discord-player/extractor');
+const { YoutubeiExtractor } = require("discord-player-youtubei")
+const { DefaultExtractors, SpotifyExtractor, AppleMusicExtractor } = require('@discord-player/extractor');
 
 
 // Loading dotenv configuration
@@ -53,7 +54,8 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'
 const player = new Player(client);
 
 async function initialize() {
-    await player.extractors.loadMulti(DefaultExtractors);
+    await player.extractors.loadMulti([DefaultExtractors, SpotifyExtractor, AppleMusicExtractor]);
+    await player.extractors.register(YoutubeiExtractor, {});
 
     for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
